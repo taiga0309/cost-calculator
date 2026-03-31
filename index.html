@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原価計算アプリ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 原価計算システム (kg単価ベース)</h1>
+            <nav>
+                <a href="admin.html" class="admin-btn">管理者ページ</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="calc-form">
+                <h2>利益計算</h2>
+                
+                <div class="input-group">
+                    <label for="product">製品選択:</label>
+                    <select id="product" onchange="updateCalculation()">
+                        <option value="">製品を選択してください</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="shipping-type">輸送形態:</label>
+                    <select id="shipping-type" onchange="updateCalculation()">
+                        <option value="">輸送形態を選択してください</option>
+                        <option value="fcl">FCL(20ft)</option>
+                        <option value="flexi">Flexi</option>
+                        <option value="iso">ISO</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="price">販売単価 (kg当たり):</label>
+                    <input type="number" id="price" step="0.01" placeholder="0.00" oninput="updateCalculation()">
+                </div>
+
+                <div class="input-group">
+                    <label for="currency">通貨:</label>
+                    <select id="currency" onchange="updateCalculation()">
+                        <option value="USD">USD</option>
+                        <option value="RMB">RMB</option>
+                        <option value="VND">VND</option>
+                    </select>
+                </div>
+
+                <div class="product-info" id="product-info" style="display:none;">
+                    <h3>製品・輸送情報</h3>
+                    <div class="info-item">
+                        <span>登録数量:</span>
+                        <span id="product-quantity">-kg</span>
+                    </div>
+                    <div class="info-item">
+                        <span>選択輸送形態:</span>
+                        <span id="selected-shipping">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span>運賃総額:</span>
+                        <span id="total-shipping-cost">$0.00</span>
+                    </div>
+                    <div class="info-item">
+                        <span>運賃単価:</span>
+                        <span id="logistics-unit-price">$0.00/kg</span>
+                    </div>
+                </div>
+
+                <div class="results" id="results">
+                    <h3>計算結果 (kg当たり)</h3>
+                    <div class="result-item">
+                        <span>限界利益率:</span>
+                        <span id="profit-rate">--%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>限界利益額 (USD):</span>
+                        <span id="profit-usd">$0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>限界利益額 (RMB):</span>
+                        <span id="profit-rmb">¥0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>限界利益額 (VND):</span>
+                        <span id="profit-vnd">₫0</span>
+                    </div>
+                </div>
+
+                <div class="cost-breakdown" id="cost-breakdown">
+                    <h3>コスト内訳 (kg当たり)</h3>
+                    <div class="breakdown-item">
+                        <span>原料費:</span>
+                        <span id="raw-cost">$0.00</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>変動費:</span>
+                        <span id="variable-cost">$0.00</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>ロイヤリティー (3%):</span>
+                        <span id="royalty-cost">$0.00</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>運賃 (kg単価):</span>
+                        <span id="logistics-cost">$0.00</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>容器費:</span>
+                        <span id="container-cost">$0.00</span>
+                    </div>
+                    <div class="breakdown-total">
+                        <span>総コスト:</span>
+                        <span id="total-cost">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
