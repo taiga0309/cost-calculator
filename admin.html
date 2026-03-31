@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ページ - 原価計算アプリ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ 管理者ページ</h1>
+            <nav>
+                <a href="index.html" class="back-btn">← メインページに戻る</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="admin-panel">
+                <!-- システム設定セクション -->
+                <section class="system-settings">
+                    <h2>⚙️ システム設定</h2>
+                    
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <h3>為替レート</h3>
+                            <div class="rate-group">
+                                <label>USD → RMB:</label>
+                                <input type="number" id="usd-rmb" step="0.01" value="7.20" onchange="saveExchangeRates()">
+                            </div>
+                            <div class="rate-group">
+                                <label>USD → VND:</label>
+                                <input type="number" id="usd-vnd" step="1" value="24000" onchange="saveExchangeRates()">
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3>輸送形態別標準数量 (kg)</h3>
+                            <div class="quantity-group">
+                                <label>FCL(20ft):</label>
+                                <input type="number" id="fcl-quantity" value="18900" onchange="saveShippingQuantities()">
+                            </div>
+                            <div class="quantity-group">
+                                <label>Flexi:</label>
+                                <input type="number" id="flexi-quantity" value="22000" onchange="saveShippingQuantities()">
+                            </div>
+                            <div class="quantity-group">
+                                <label>ISO:</label>
+                                <input type="number" id="iso-quantity" value="23500" onchange="saveShippingQuantities()">
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3>計算設定</h3>
+                            <div class="calc-group">
+                                <label>ロイヤリティー率 (%):</label>
+                                <input type="number" id="royalty-rate" step="0.1" value="3.0" onchange="saveCalculationSettings()">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 製品管理セクション -->
+                <section class="product-management">
+                    <h2>📦 製品管理</h2>
+                    
+                    <div class="table-controls">
+                        <button class="add-row-btn" onclick="addNewProduct(); console.log('ボタンがクリックされました');">+ 新製品追加</button>
+                        <button class="save-all-btn" onclick="saveAllProducts()">💾 すべて保存</button>
+                        <div class="auto-save-status" id="auto-save-status">自動保存: オン</div>
+                    </div>
+
+                    <div class="editable-table-container">
+                        <table class="editable-table" id="products-editable-table">
+                            <thead>
+                                <tr>
+                                    <th>製品名</th>
+                                    <th>原料費<br><small>(RMB/トン)</small></th>
+                                    <th>変動費<br><small>(USD/kg)</small></th>
+                                    <th>容器費<br><small>(USD/kg)</small></th>
+                                    <th>FCL運賃<br><small>(USD)</small></th>
+                                    <th>Flexi運賃<br><small>(USD)</small></th>
+                                    <th>ISO運賃<br><small>(USD)</small></th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="editable-products-body">
+                                <!-- 製品データがここに表示される -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-info">
+                        <p><strong>使い方:</strong> セルをクリックして直接編集できます。Enterキーで確定、Escキーでキャンセルできます。</p>
+                        <p><strong>自動保存:</strong> 編集後3秒で自動保存されます。</p>
+                        <p><strong>原料費:</strong> RMB/トンで入力すると自動的にUSD/kgに変換されます。</p>
+                    </div>
+                </section>
+
+                <!-- 従来のフォーム（バックアップ用） -->
+                <section class="legacy-form" style="display: none;">
+                    <h2>従来の入力フォーム</h2>
+                    <div class="add-product">
+                        <h3 id="form-title">新製品追加</h3>
+                        <div class="product-form">
+                            <input type="hidden" id="edit-product-id" value="">
+                            <input type="text" id="new-product-name" placeholder="製品名">
+                            
+                            <!-- 原料費入力部分 -->
+                            <div class="cost-input-group">
+                                <input type="number" id="new-raw-cost" step="0.01" placeholder="原料費 (RMB/トン)" oninput="updateRawCostConversion()">
+                                <div class="converted-cost" id="raw-cost-converted">
+                                    = $0.00/kg (USD)
+                                </div>
+                            </div>
+                            
+                            <input type="number" id="new-variable-cost" step="0.01" placeholder="変動費 (USD/kg)">
+                            <input type="number" id="new-container-cost" step="0.01" placeholder="容器費 (USD/kg)">
+                            
+                            <!-- 輸送形態別運賃設定 -->
+                            <div class="shipping-costs">
+                                <h4>輸送形態別運賃設定</h4>
+                                <div class="shipping-form">
+                                    <input type="number" id="new-fcl-cost" step="0.01" placeholder="FCL(18,900kg) 運賃総額 (USD)">
+                                    <input type="number" id="new-flexi-cost" step="0.01" placeholder="Flexi(22,000kg) 運賃総額 (USD)">
+                                    <input type="number" id="new-iso-cost" step="0.01" placeholder="ISO(23,500kg) 運賃総額 (USD)">
+                                </div>
+                            </div>
+                            
+                            <div class="form-buttons">
+                                <button id="save-btn" onclick="saveProduct()">製品追加</button>
+                                <button id="cancel-btn" onclick="cancelEdit()" style="display:none;">キャンセル</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- 保存状態インジケーター -->
+    <div id="save-indicator" class="save-indicator"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // 管理者ページ用の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('管理者ページが読み込まれました');
+            
+            // データ読み込み
+            loadData();
+            
+            // システム設定読み込み
+            loadSystemSettings();
+            
+            // 編集可能テーブル表示
+            displayEditableProducts();
+            
+            // メインページ用の製品選択肢更新
+            populateProductSelect();
+            
+            console.log('初期化完了。製品数:', products.length);
+        });
+
+        // デバッグ用関数
+        function debugInfo() {
+            console.log('=== デバッグ情報 ===');
+            console.log('製品数:', products.length);
+            console.log('製品リスト:', products);
+            console.log('テーブルボディ要素:', document.getElementById('editable-products-body'));
+            console.log('==================');
+        }
+
+        // デバッグボタン（一時的）
+        function showDebugInfo() {
+            debugInfo();
+        }
+    </script>
+</body>
+</html>
