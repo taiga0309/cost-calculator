@@ -1,0 +1,23 @@
+{
+  "name": "原価計算システム",
+  "short_name": "原価計算",
+  "description": "kg単価ベースの原価計算アプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#4299e1",
+  "orientation": "portrait",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM0Mjk5ZTEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xOS4wNSA0Ljk1bC0xLjQxIDEuNDFMMTYuMjMgNWwtMS40MS0xLjQxTDE5LjA1IDQuOTV6TTEyIDJoMnYzaC0yVjJ6bTcgMTBoM3YyaC0zdi0yem0tNyAxNGgydjNoLTJ2LTN6bS05LTEwaDN2Mkgzdi0yem0yLjE5LTEuMzFsMS40MSAxLjQxTDUuMTkgNy4zMWwtMS40MS0xLjQxTDMuMTkgNi42OXptMTMuNjIgMTAuNjJsLTEuNDEtMS40MUwxNi44MSAxNmwxLjQxIDEuNDEtMS40MSAxLjQxem0tMTMuNjIgMGwxLjQxIDEuNDFMNy44MSAxNmwtMS40MS0xLjQxTDMuMTkgMTcuMzF6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiM0Mjk5ZTEiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTkuMDUgNC45NWwtMS40MSAxLjQxTDE2LjIzIDVsLTEuNDEtMS40MUwxOS4wNSA0Ljk1ek0xMiAyaDJ2M2gtMlYyem03IDEwaDN2MmgtM3YtMnptLTcgMTRoMnYzaC0ydi0zem0tOS0xMGgzdjJIM3YtMnptMi4xOS0xLjMxbDEuNDEgMS40MUw1LjE5IDcuMzFsLTEuNDEtMS40MUwzLjE5IDYuNjl6bTEzLjYyIDEwLjYybC0xLjQxLTEuNDFMMTYuODEgMTZsMS40MSAxLjQxLTEuNDEgMS40MXptLTEzLjYyIDBsMS40MSAxLjQxTDcuODEgMTZsLTEuNDEtMS40MUwzLjE5IDE3LjMxeiIvPgo8L3N2Zz4KPC9zdmc+Cg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
