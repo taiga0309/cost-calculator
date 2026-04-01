@@ -1010,3 +1010,135 @@ button:focus {
         font-size: 10px;
     }
 }
+
+/* 利益通貨選択グループ */
+.profit-currency-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profit-currency-group select {
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+.profit-currency-group span {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1e3a8a;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+/* 月間利益計算 */
+.monthly-profit {
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    border-left: 5px solid #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+}
+
+.monthly-profit h3 {
+    color: #15803d;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.monthly-profit h3:before {
+    content: "📈";
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.monthly-input-group {
+    margin-bottom: 20px;
+}
+
+.monthly-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #15803d;
+    font-size: 16px;
+}
+
+.monthly-input-group input {
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #bbf7d0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.monthly-input-group input:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.monthly-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    font-size: 16px;
+}
+
+.monthly-currencies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.currency-result {
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+}
+
+.currency-label {
+    display: block;
+    font-size: 12px;
+    color: #15803d;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.currency-result span:last-child {
+    font-weight: 700;
+    font-size: 16px;
+    color: #166534;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .profit-currency-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .monthly-result {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .monthly-currencies {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+}
