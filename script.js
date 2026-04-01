@@ -355,6 +355,21 @@ function updateCalculation() {
     if (logisticsCostEl) logisticsCostEl.textContent = '$' + logisticsCost.toFixed(4);
     if (containerCostEl) containerCostEl.textContent = '$' + containerCost.toFixed(4);
     if (totalCostEl) totalCostEl.textContent = '$' + totalCost.toFixed(4);
+
+    // 利益通貨選択の更新
+    updateProfitCurrencyDisplay();
+    
+    // 月間利益セクションを表示
+    const monthlyProfitEl = document.getElementById('monthly-profit');
+    if (monthlyProfitEl) {
+        monthlyProfitEl.style.display = 'block';
+    }
+    
+    // 月間利益の更新（値が入力されている場合）
+    const monthlyVolumeInput = document.getElementById('monthly-volume');
+    if (monthlyVolumeInput && monthlyVolumeInput.value) {
+        updateMonthlyProfit();
+    }
 }
 
 // 結果のクリア
@@ -1186,4 +1201,120 @@ function updateCalculation() {
         }
     }, 100);
 }
+}
+
+// 利益通貨表示の更新
+function updateProfitCurrencyDisplay() {
+    const selectedCurrency = document.getElementById('profit-currency');
+    const profitAmountEl = document.getElementById('profit-amount');
+    const profitUsdEl = document.getElementById('profit-usd');
+    
+    if (!selectedCurrency || !profitAmountEl || !profitUsdEl) return;
+    
+    const profitUSD = parseFloat(profitUsdEl.textContent.replace('$', '')) || 0;
+    const currency = selectedCurrency.value;
+    
+    // 選択された通貨に変換
+    let convertedAmount = profitUSD;
+    let symbol = '$';
+    
+    switch(currency) {
+        case 'USD':
+            convertedAmount = profitUSD;
+            symbol = '$';
+            break;
+        case 'RMB':
+            convertedAmount = profitUSD * exchangeRates.usdToRmb;
+            symbol = '¥';
+            break;
+        case 'VND':
+            convertedAmount = profitUSD * exchangeRates.usdToVnd;
+            symbol = '₫';
+            break;
+        case 'JPY':
+            convertedAmount = profitUSD * exchangeRates.usdToJpy;
+            symbol = '¥';
+            break;
+    }
+    
+    // 表示更新
+    if (currency === 'VND' || currency === 'JPY') {
+        profitAmountEl.textContent = symbol + Math.round(convertedAmount).toLocaleString();
+    } else {
+        profitAmountEl.textContent = symbol + convertedAmount.toFixed(4);
+    }
+    
+    // 利益率に応じて色を変更
+    if (convertedAmount > 0) {
+        profitAmountEl.style.color = '#059669';
+    } else if (convertedAmount < 0) {
+        profitAmountEl.style.color = '#dc2626';
+    } else {
+        profitAmountEl.style.color = '#6b7280';
+    }
+}
+
+// 利益表示通貨の変更時
+function updateProfitDisplay() {
+    updateProfitCurrencyDisplay();
+}
+
+// 月間利益の更新
+function updateMonthlyProfit() {
+    const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
+    const profitUsdEl = document.getElementById('profit-usd');
+    const monthlyProfitEl = document.getElementById('monthly-profit');
+    
+    if (!profitUsdEl || !monthlyProfitEl) return;
+    
+    if (monthlyVolume <= 0) {
+        // 月間利益の値をクリア（セクションは表示したまま）
+        const elements = {
+            'monthly-profit-usd': '$0.00',
+            'monthly-profit-rmb': '¥0.00',
+            'monthly-profit-vnd': '₫0',
+            'monthly-profit-jpy': '¥0'
+        };
+        
+        Object.keys(elements).forEach(function(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = elements[id];
+            }
+        });
+        return;
+    }
+    
+    // kg当たりの利益を取得
+    const profitPerKg = parseFloat(profitUsdEl.textContent.replace('$', '')) || 0;
+    
+    // 月間利益計算（トン→kg変換）
+    const monthlyProfitUsd = profitPerKg * monthlyVolume * 1000;
+    const monthlyProfitRmb = monthlyProfitUsd * exchangeRates.usdToRmb;
+    const monthlyProfitVnd = monthlyProfitUsd * exchangeRates.usdToVnd;
+    const monthlyProfitJpy = monthlyProfitUsd * exchangeRates.usdToJpy;
+    
+    // 表示更新
+    const elements = {
+        'monthly-profit-usd': '$' + monthlyProfitUsd.toFixed(2),
+        'monthly-profit-rmb': '¥' + monthlyProfitRmb.toFixed(2),
+        'monthly-profit-vnd': '₫' + Math.round(monthlyProfitVnd).toLocaleString(),
+        'monthly-profit-jpy': '¥' + Math.round(monthlyProfitJpy).toLocaleString()
+    };
+    
+    Object.keys(elements).forEach(function(id) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = elements[id];
+            
+            // 利益に応じて色を変更
+            if (monthlyProfitUsd > 0) {
+                element.style.color = '#059669';
+            } else if (monthlyProfitUsd < 0) {
+                element.style.color = '#dc2626';
+            } else {
+                element.style.color = '#6b7280';
+            }
+        }
+    });
 }
