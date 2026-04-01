@@ -175,6 +175,7 @@ function saveExchangeRates() {
     const usdRmb = document.getElementById('usd-rmb');
     const usdVnd = document.getElementById('usd-vnd');
     const usdJpy = document.getElementById('usd-jpy');
+    
     if (usdRmb && usdVnd && usdJpy) {
         exchangeRates.usdToRmb = parseFloat(usdRmb.value);
         exchangeRates.usdToVnd = parseFloat(usdVnd.value);
@@ -236,24 +237,6 @@ function getCurrencySymbol(currency) {
         'JPY': '¥'
     };
     return symbols[currency] || '$';
-}
-
-    
-    if (usdRmb && usdVnd && usdJpy) {
-        exchangeRates.usdToRmb = parseFloat(usdRmb.value);
-        exchangeRates.usdToVnd = parseFloat(usdVnd.value);
-        exchangeRates.usdToJpy = parseFloat(usdJpy.value);
-        localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
-        
-        // 更新時刻を記録
-        const updateTime = new Date().toLocaleString('ja-JP');
-        const timeElement = document.getElementById('rate-update-time');
-        if (timeElement) {
-            timeElement.textContent = updateTime;
-        }
-        
-        showSaveIndicator('saved', '為替レートを保存しました');
-    }
 }
 
 // 製品選択肢の更新
@@ -687,6 +670,7 @@ function createEditableRow(product, index) {
     // Flexi運賃セル
     const flexiCostCell = document.createElement('td');
     const flexiCostDiv = document.createElement('div');
+    flexiCostDiv.className = 'editable-cell
     flexiCostDiv.className = 'editable-cell number';
     flexiCostDiv.textContent = (product.shippingCosts && product.shippingCosts.flexi ? product.shippingCosts.flexi : 0).toFixed(2);
     flexiCostDiv.dataset.originalValue = product.shippingCosts && product.shippingCosts.flexi ? product.shippingCosts.flexi : 0;
