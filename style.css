@@ -1142,3 +1142,214 @@ button:focus {
         width: 100%;
     }
 }
+/* 既存のCSS内容... */
+
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 印刷用スタイル */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .admin-btn, .back-btn {
+        display: none;
+    }
+    
+    .calc-form, .admin-panel, .product-info, .results, .cost-breakdown {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    
+    .input-group input,
+    .input-group select {
+        border: 1px solid #ccc;
+        background: white;
+    }
+    
+    .save-indicator {
+        display: none;
+    }
+}
+
+/* ここから下に新しいCSSを追加 */
+
+/* =================================== */
+/* 新機能対応の追加スタイル */
+/* =================================== */
+
+/* 利益表示の改善 */
+.results .result-item:first-child span:last-child {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.results .result-item:first-child span:last-child[style*="color: #dc2626"] {
+    color: #dc2626 !important; /* 赤字の場合 */
+}
+
+.results .result-item:first-child span:last-child[style*="color: #059669"] {
+    color: #059669 !important; /* 黒字の場合 */
+}
+
+/* 利益通貨選択の改善 */
+.profit-currency-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.profit-currency-group select {
+    padding: 8px 12px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.profit-currency-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.profit-currency-group span {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1e3a8a;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* 月間利益計算の表示制御改善 */
+.monthly-profit.show {
+    display: block;
+    animation: slideIn 0.5s ease-out;
+}
+
+/* ロイヤリティー率の動的表示 */
+.breakdown-item.royalty-item span:first-child {
+    color: #7c3aed;
+}
+
+.breakdown-item.royalty-item span:last-child {
+    color: #6b21a8;
+    background: rgba(124, 58, 237, 0.1);
+}
+
+/* エラー状態のスタイル */
+.input-group.error input,
+.input-group.error select {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.input-group.error label {
+    color: #dc2626;
+}
+
+/* 成功状態のスタイル */
+.input-group.success input,
+.input-group.success select {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+/* 計算結果のアニメーション改善 */
+.results, .monthly-profit, .cost-breakdown {
+    transition: all 0.3s ease;
+}
+
+.results.updated, .monthly-profit.updated, .cost-breakdown.updated {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* 製品情報の改善 */
+.product-info.show {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* レスポンシブ対応の改善 */
+@media (max-width: 768px) {
+    .profit-currency-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .profit-currency-group select {
+        width: 100%;
+    }
+    
+    .profit-currency-group span {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .monthly-currencies {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .monthly-currencies {
+        grid-template-columns: 1fr;
+    }
+    
+    .currency-result {
+        padding: 8px;
+    }
+    
+    .currency-result span:last-child {
+        font-size: 14px;
+    }
+}
+
+/* 印刷対応の改善 */
+@media print {
+    .profit-currency-group select {
+        border: 1px solid #000;
+        background: white;
+    }
+    
+    .monthly-profit {
+        break-inside: avoid;
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+}
+
