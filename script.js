@@ -3,6 +3,8 @@ let products = [];
 let exchangeRates = {
     usdToRmb: 7.20,
     usdToVnd: 24000
+    usdToJpy: 150.0
+};
 };
 
 // 輸送形態別の標準数量
@@ -173,11 +175,70 @@ function saveProducts() {
 function saveExchangeRates() {
     const usdRmb = document.getElementById('usd-rmb');
     const usdVnd = document.getElementById('usd-vnd');
+    const usdJpy = document.getElementById('usd-jpy');
+
+// 通貨変換関数
+function convertCurrency(amount, fromCurrency, toCurrency) {
+    // まずUSDに変換
+    let usdAmount = amount;
+    if (fromCurrency !== 'USD') {
+        switch(fromCurrency) {
+            case 'RMB':
+                usdAmount = amount / exchangeRates.usdToRmb;
+                break;
+            case 'VND':
+                usdAmount = amount / exchangeRates.usdToVnd;
+                break;
+            case 'JPY':
+                usdAmount = amount / exchangeRates.usdToJpy;
+                break;
+        }
+    }
     
-    if (usdRmb && usdVnd) {
+    // USDから目標通貨に変換
+    if (toCurrency === 'USD') {
+        return usdAmount;
+    } else {
+        switch(toCurrency) {
+            case 'RMB':
+                return usdAmount * exchangeRates.usdToRmb;
+            case 'VND':
+                return usdAmount * exchangeRates.usdToVnd;
+            case 'JPY':
+                return usdAmount * exchangeRates.usdToJpy;
+            default:
+                return usdAmount;
+        }
+    }
+}
+
+// 通貨記号の取得
+function getCurrencySymbol(currency) {
+    const symbols = {
+        'USD': '$',
+        'RMB': '¥',
+        'VND': '₫',
+        'JPY': '¥'
+    };
+    return symbols[currency] || '$';
+}
+
+
+    
+    if (usdRmb && usdVnd && usdJpy) {
         exchangeRates.usdToRmb = parseFloat(usdRmb.value);
         exchangeRates.usdToVnd = parseFloat(usdVnd.value);
+        exchangeRates.usdToJpy = parseFloat(usdJpy.value);
         localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
+        
+        // 更新時刻を記録
+        const updateTime = new Date().toLocaleString('ja-JP');
+        const timeElement = document.getElementById('rate-update-time');
+        if (timeElement) {
+            timeElement.textContent = updateTime;
+        }
+        
+        showSaveIndicator('saved', '為替レートを保存しました');
     }
 }
 
@@ -339,6 +400,7 @@ function loadSystemSettings() {
     // UIに反映
     const usdRmb = document.getElementById('usd-rmb');
     const usdVnd = document.getElementById('usd-vnd');
+    const usdJpy = document.getElementById('usd-jpy');
     const fcl20Quantity = document.getElementById('fcl20-quantity');
     const fcl40Quantity = document.getElementById('fcl40-quantity');
     const flexiQuantity = document.getElementById('flexi-quantity');
@@ -347,6 +409,7 @@ function loadSystemSettings() {
     
     if (usdRmb) usdRmb.value = exchangeRates.usdToRmb;
     if (usdVnd) usdVnd.value = exchangeRates.usdToVnd;
+    if (usdJpy) usdJpy.value = exchangeRates.usdToJpy;
     if (fcl20Quantity) fcl20Quantity.value = shippingQuantities.fcl20;
     if (fcl40Quantity) fcl40Quantity.value = shippingQuantities.fcl40;
     if (flexiQuantity) flexiQuantity.value = shippingQuantities.flexi;
