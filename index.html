@@ -81,24 +81,54 @@
                 </div>
 
                 <div class="results" id="results">
-                    <h3>計算結果 (kg当たり)</h3>
-                    <div class="result-item">
-                        <span>限界利益率:</span>
-                        <span id="profit-rate">--%</span>
-                    </div>
-                    <div class="result-item">
-                        <span>限界利益額 (USD):</span>
-                        <span id="profit-usd">$0.00</span>
-                    </div>
-                    <div class="result-item">
-                        <span>限界利益額 (RMB):</span>
-                        <span id="profit-rmb">¥0.00</span>
-                    </div>
-                    <div class="result-item">
-                        <span>限界利益額 (VND):</span>
-                        <span id="profit-vnd">₫0</span>
-                    </div>
-                </div>
+    <h3>計算結果 (kg当たり)</h3>
+    <div class="result-item">
+        <span>限界利益率:</span>
+        <span id="profit-rate">--%</span>
+    </div>
+    <div class="result-item">
+        <span>限界利益額:</span>
+        <div class="profit-currency-group">
+            <select id="profit-currency" onchange="updateProfitDisplay()">
+                <option value="USD">USD ($)</option>
+                <option value="RMB">RMB (¥)</option>
+                <option value="VND">VND (₫)</option>
+                <option value="JPY">JPY (¥)</option>
+            </select>
+            <span id="profit-amount">$0.00</span>
+        </div>
+    </div>
+</div>
+
+<!-- 月間利益計算セクションを追加 -->
+<div class="monthly-profit" id="monthly-profit" style="display:none;">
+    <h3>月間利益シミュレーション</h3>
+    <div class="monthly-input-group">
+        <label for="monthly-volume">月販売量 (トン):</label>
+        <input type="number" id="monthly-volume" step="0.1" placeholder="0.0" oninput="updateMonthlyProfit()">
+    </div>
+    <div class="monthly-result">
+        <span>月限界利益額:</span>
+        <div class="monthly-currencies">
+            <div class="currency-result">
+                <span class="currency-label">USD:</span>
+                <span id="monthly-profit-usd">$0.00</span>
+            </div>
+            <div class="currency-result">
+                <span class="currency-label">RMB:</span>
+                <span id="monthly-profit-rmb">¥0.00</span>
+            </div>
+            <div class="currency-result">
+                <span class="currency-label">VND:</span>
+                <span id="monthly-profit-vnd">₫0</span>
+            </div>
+            <div class="currency-result">
+                <span class="currency-label">JPY:</span>
+                <span id="monthly-profit-jpy">¥0</span>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <div class="cost-breakdown" id="cost-breakdown">
                     <h3>コスト内訳 (kg当たり)</h3>
