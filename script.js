@@ -1007,3 +1007,51 @@ function debugInfo() {
     // 強制的にテーブルを再描画
     displayEditableProducts();
 }
+// 利益表示通貨の更新
+function updateProfitDisplay() {
+    const selectedCurrency = document.getElementById('profit-currency').value;
+    const profitAmountEl = document.getElementById('profit-amount');
+    
+    // 現在の計算結果を再取得して表示
+    updateCalculation();
+}
+
+// 月間利益の更新
+function updateMonthlyProfit() {
+    const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
+    const profitUsdEl = document.getElementById('profit-usd');
+    
+    if (!profitUsdEl || monthlyVolume <= 0) {
+        // 月間利益をクリア
+        const monthlyUsdEl = document.getElementById('monthly-profit-usd');
+        const monthlyRmbEl = document.getElementById('monthly-profit-rmb');
+        const monthlyVndEl = document.getElementById('monthly-profit-vnd');
+        const monthlyJpyEl = document.getElementById('monthly-profit-jpy');
+        
+        if (monthlyUsdEl) monthlyUsdEl.textContent = '$0.00';
+        if (monthlyRmbEl) monthlyRmbEl.textContent = '¥0.00';
+        if (monthlyVndEl) monthlyVndEl.textContent = '₫0';
+        if (monthlyJpyEl) monthlyJpyEl.textContent = '¥0';
+        return;
+    }
+    
+    // kg当たりの利益を取得（$マークを除去）
+    const profitPerKg = parseFloat(profitUsdEl.textContent.replace('$', '')) || 0;
+    
+    // 月間利益計算（トン→kg変換: 1トン = 1000kg）
+    const monthlyProfitUsd = profitPerKg * monthlyVolume * 1000;
+    const monthlyProfitRmb = monthlyProfitUsd * exchangeRates.usdToRmb;
+    const monthlyProfitVnd = monthlyProfitUsd * exchangeRates.usdToVnd;
+    const monthlyProfitJpy = monthlyProfitUsd * exchangeRates.usdToJpy;
+    
+    // 表示更新
+    const monthlyUsdEl = document.getElementById('monthly-profit-usd');
+    const monthlyRmbEl = document.getElementById('monthly-profit-rmb');
+    const monthlyVndEl = document.getElementById('monthly-profit-vnd');
+    const monthlyJpyEl = document.getElementById('monthly-profit-jpy');
+    
+    if (monthlyUsdEl) monthlyUsdEl.textContent = '$' + monthlyProfitUsd.toFixed(2);
+    if (monthlyRmbEl) monthlyRmbEl.textContent = '¥' + monthlyProfitRmb.toFixed(2);
+    if (monthlyVndEl) monthlyVndEl.textContent = '₫' + Math.round(monthlyProfitVnd).toLocaleString();
+    if (monthlyJpyEl) monthlyJpyEl.textContent = '¥' + Math.round(monthlyProfitJpy).toLocaleString();
+}
