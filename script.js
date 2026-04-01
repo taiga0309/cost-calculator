@@ -435,8 +435,6 @@ function updateProfitDisplay() {
 }
 
 // 月間利益の更新
-
-// 月間利益の更新（見栄え改善版）
 function updateMonthlyProfit() {
     const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
     const profitRateEl = document.getElementById('profit-rate');
@@ -455,21 +453,13 @@ function updateMonthlyProfit() {
     const monthlyVndEl = document.getElementById('monthly-profit-vnd');
     const monthlyJpyEl = document.getElementById('monthly-profit-jpy');
     
-    // 親要素を取得してアニメーション用クラスを追加
-    const currencyResults = document.querySelectorAll('.currency-result');
-    currencyResults.forEach(function(el) {
-        el.classList.add('updating');
-        setTimeout(function() {
-            el.classList.remove('updating');
-        }, 500);
-    });
-    
     if (monthlyVolume <= 0 || price <= 0) {
         // クリア
         updateCurrencyDisplay(monthlyUsdEl, 0, '$', 'USD');
         updateCurrencyDisplay(monthlyRmbEl, 0, '¥', 'RMB');
         updateCurrencyDisplay(monthlyVndEl, 0, '₫', 'VND');
         updateCurrencyDisplay(monthlyJpyEl, 0, '¥', 'JPY');
+        updateMonthlyProfitDisplay(); // メイン表示も更新
         return;
     }
     
@@ -495,39 +485,25 @@ function updateMonthlyProfit() {
     updateCurrencyDisplay(monthlyRmbEl, monthlyProfitRmb, '¥', 'RMB');
     updateCurrencyDisplay(monthlyVndEl, monthlyProfitVnd, '₫', 'VND');
     updateCurrencyDisplay(monthlyJpyEl, monthlyProfitJpy, '¥', 'JPY');
+    
+    // メイン表示も更新
+    updateMonthlyProfitDisplay();
 }
 
 // 通貨表示の更新（共通関数）
 function updateCurrencyDisplay(element, amount, symbol, currency) {
     if (!element) return;
     
-    // 親要素のクラス管理
-    const parentResult = element.closest('.currency-result');
-    if (parentResult) {
-        // 既存のクラスをリセット
-        parentResult.classList.remove('high-profit', 'loss');
-        
-        // 金額に応じてクラスを追加
-        if (amount > 100000) { // 大きな利益
-            parentResult.classList.add('high-profit');
-        } else if (amount < 0) { // 損失
-            parentResult.classList.add('loss');
-        }
-    }
-    
-    // 数値フォーマット
+    // 数値フォーマット（小数点以下にカンマを入れない）
     let formattedAmount;
     if (currency === 'VND' || currency === 'JPY') {
         // 整数でカンマ区切り
         formattedAmount = Math.round(amount).toLocaleString();
     } else {
-        // 小数点以下2桁でカンマ区切り
-        if (Math.abs(amount) >= 1000000) {
-            // 100万以上は小数点1桁
-            formattedAmount = amount.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        } else {
-            formattedAmount = amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
+        // 小数点以下2桁、整数部分のみカンマ区切り
+        const integerPart = Math.floor(Math.abs(amount)).toLocaleString();
+        const decimalPart = (Math.abs(amount) % 1).toFixed(2).substring(1);
+        formattedAmount = (amount < 0 ? '-' : '') + integerPart + decimalPart;
     }
     
     // 表示更新
@@ -540,12 +516,6 @@ function updateCurrencyDisplay(element, amount, symbol, currency) {
         element.style.color = '#dc2626';
     } else {
         element.style.color = '#6b7280';
-    }
-    
-    // 大きな数値の場合は単位を追加
-    if (Math.abs(amount) >= 1000000) {
-        const unit = Math.abs(amount) >= 1000000000 ? 'B' : 'M';
-        element.setAttribute('title', '約' + (amount / (unit === 'B' ? 1000000000 : 1000000)).toFixed(1) + unit + ' ' + currency);
     }
 }
 
@@ -1200,4 +1170,79 @@ function debugInfo() {
     // 強制的にテーブルを再描画
     displayEditableProducts();
 }
-            
+
+// 月間利益表示通貨の更新
+function updateMonthlyProfitDisplay() {
+    const selectedCurrency = document.getElementById('monthly-currency');
+    const monthlyProfitAmount = document.getElementById('monthly-profit-amount');
+    const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
+    const profitRateEl = document.getElementById('profit-rate');
+    const priceInput = document.getElementById('price');
+    const currencyInput = document.getElementById('currency');
+    
+    if (!selectedCurrency || !monthlyProfitAmount || !profitRateEl || !priceInput) return;
+    
+    if (monthlyVolume <= 0) {
+        monthlyProfitAmount.textContent = '$0';
+        return;
+    }
+    
+    const profitRate = parseFloat(profitRateEl.textContent.replace('%', '')) || 0;
+    const price = parseFloat(priceInput.value) || 0;
+    const inputCurrency = currencyInput ? currencyInput.value : 'USD';
+    
+    if (price <= 0) {
+        monthlyProfitAmount.textContent = '$0';
+        return;
+    }
+    
+    // 入力価格をUSDに変換
+    let priceUSD = price;
+    if (inputCurrency === 'RMB') {
+        priceUSD = price / exchangeRates.usdToRmb;
+    } else if (inputCurrency === 'VND') {
+        priceUSD = price / exchangeRates.usdToVnd;
+    }
+    
+    // kg当たりの利益をUSDで計算
+    const profitPerKgUSD = priceUSD * (profitRate / 100);
+    
+    // 月間利益計算（トン→kg変換）
+    const monthlyProfitUsd = profitPerKgUSD * monthlyVolume * 1000;
+    
+    // 選択された通貨に変換
+    let displayAmount = monthlyProfitUsd;
+    let symbol = '$';
+    
+    switch(selectedCurrency.value) {
+        case 'USD':
+            displayAmount = monthlyProfitUsd;
+            symbol = '$';
+            break;
+        case 'RMB':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToRmb;
+            symbol = '¥';
+            break;
+        case 'VND':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToVnd;
+            symbol = '₫';
+            break;
+        case 'JPY':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToJpy;
+            symbol = '¥';
+            break;
+    }
+    
+    // 数値フォーマット
+    let formattedAmount;
+    if (selectedCurrency.value === 'VND' || selectedCurrency.value === 'JPY') {
+        formattedAmount = Math.round(displayAmount).toLocaleString();
+    } else {
+        const integerPart = Math.floor(Math.abs(displayAmount)).toLocaleString();
+        const decimalPart = (Math.abs(displayAmount) % 1).toFixed(2).substring(1);
+        formattedAmount = (displayAmount < 0 ? '-' : '') + integerPart + decimalPart;
+    }
+    
+    // 表示更新
+    monthlyProfitAmount.textContent = symbol + formattedAmount;
+}
