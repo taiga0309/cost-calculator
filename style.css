@@ -1352,4 +1352,253 @@ button:focus {
         box-shadow: none;
     }
 }
+/* 月間利益セクションの改善 */
+.monthly-profit {
+    margin-top: 30px;
+    padding: 30px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 16px;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+    position: relative;
+    overflow: hidden;
+}
 
+.monthly-profit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981, #059669, #047857);
+}
+
+.monthly-profit h3 {
+    color: #065f46;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.monthly-profit h3:before {
+    content: "📈";
+    margin-right: 12px;
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.monthly-input-group {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.monthly-input-group label {
+    font-weight: 700;
+    color: #065f46;
+    font-size: 16px;
+    min-width: 140px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.monthly-input-group input {
+    flex: 1;
+    max-width: 200px;
+    padding: 14px 18px;
+    border: 2px solid #bbf7d0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.monthly-input-group input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    transform: translateY(-1px);
+}
+
+.monthly-result {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.monthly-result > span {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.monthly-currencies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.currency-result {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.currency-result:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: #10b981;
+}
+
+.currency-result::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.currency-result:hover::before {
+    transform: scaleX(1);
+}
+
+.currency-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.currency-result span:last-child {
+    font-weight: 800;
+    font-size: 20px;
+    color: #1f2937;
+    display: block;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* 通貨別のアクセントカラー */
+.currency-result:nth-child(1) {
+    border-left: 4px solid #059669;
+}
+
+.currency-result:nth-child(2) {
+    border-left: 4px solid #dc2626;
+}
+
+.currency-result:nth-child(3) {
+    border-left: 4px solid #7c3aed;
+}
+
+.currency-result:nth-child(4) {
+    border-left: 4px solid #ea580c;
+}
+
+/* 利益額が大きい場合の特別表示 */
+.currency-result.high-profit span:last-child {
+    color: #059669;
+    font-size: 22px;
+    animation: pulse-profit 2s infinite;
+}
+
+.currency-result.loss span:last-child {
+    color: #dc2626;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes pulse-profit {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .monthly-profit {
+        padding: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .monthly-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .monthly-input-group label {
+        min-width: auto;
+        text-align: center;
+    }
+    
+    .monthly-input-group input {
+        max-width: 100%;
+    }
+    
+    .monthly-currencies {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .currency-result {
+        padding: 15px;
+    }
+    
+    .currency-result span:last-child {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .monthly-currencies {
+        grid-template-columns: 1fr;
+    }
+    
+    .monthly-profit h3 {
+        font-size: 20px;
+    }
+    
+    .currency-result span:last-child {
+        font-size: 16px;
+    }
+}
+
+/* 数値アニメーション */
+.currency-result span:last-child {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.currency-result.updating span:last-child {
+    transform: scale(1.1);
+    color: #10b981;
+}
