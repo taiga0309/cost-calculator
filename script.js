@@ -7,9 +7,11 @@ let exchangeRates = {
 
 // 輸送形態別の標準数量
 const shippingQuantities = {
-    fcl: 18900,
+    fcl20: 18900,    // この行を修正
+    fcl40: 24150,    // この行を追加
     flexi: 22000,
     iso: 23500
+};
 };
 
 // システム設定
@@ -183,7 +185,8 @@ function populateProductSelect() {
 // 輸送形態名の取得
 function getShippingTypeName(type) {
     const names = {
-        'fcl': 'FCL(20ft)',
+        'fcl20': 'FCL(20ft)',    // 'fcl' を 'fcl20' に変更
+        'fcl40': 'FCL(40ft)',    // この行を追加
         'flexi': 'Flexi',
         'iso': 'ISO'
     };
