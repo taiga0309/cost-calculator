@@ -1242,9 +1242,6 @@ function updateMonthlyProfitDisplay() {
         const decimalPart = (Math.abs(displayAmount) % 1).toFixed(2).substring(1);
         formattedAmount = (displayAmount < 0 ? '-' : '') + integerPart + decimalPart;
     }
-    
-    // 表示更新
-    monthlyProfitAmount.textContent = symbol + formattedAmount;
 }
 // 月間利益の更新（シンプル版）
 function updateMonthlyProfit() {
@@ -1329,4 +1326,74 @@ function updateMonthlyProfit() {
     } else {
         monthlyProfitAmount.style.color = '#6b7280';
     }
+
+        // 入力価格をUSDに変換
+    let priceUSD = price;
+    if (inputCurrency === 'RMB') {
+        priceUSD = price / exchangeRates.usdToRmb;
+    } else if (inputCurrency === 'VND') {
+        priceUSD = price / exchangeRates.usdToVnd;
+    }
+    
+    // kg当たりの利益をUSDで計算
+    const profitPerKgUSD = priceUSD * (profitRate / 100);
+    
+    // 月間利益計算（トン→kg変換）
+    const monthlyProfitUsd = profitPerKgUSD * monthlyVolume * 1000;
+    
+    // 選択された通貨に変換
+    let displayAmount = monthlyProfitUsd;
+    let symbol = '$';
+    
+    switch(selectedCurrency.value) {
+        case 'USD':
+            displayAmount = monthlyProfitUsd;
+            symbol = '$';
+            break;
+        case 'RMB':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToRmb;
+            symbol = '¥';
+            break;
+        case 'VND':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToVnd;
+            symbol = '₫';
+            break;
+        case 'JPY':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToJpy;
+            symbol = '¥';
+            break;
+    }
+    
+    // 数値フォーマット
+    let formattedAmount;
+    if (selectedCurrency.value === 'VND' || selectedCurrency.value === 'JPY') {
+        formattedAmount = Math.round(displayAmount).toLocaleString();
+    } else {
+        formattedAmount = displayAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    // 表示更新（限界利益額と同じスタイル）
+    monthlyProfitAmount.textContent = symbol + formattedAmount;
+    
+    // スタイルを限界利益額と統一
+    monthlyProfitAmount.style.fontSize = '18px';
+    monthlyProfitAmount.style.fontWeight = '700';
+    monthlyProfitAmount.style.background = 'rgba(255, 255, 255, 0.8)';
+    monthlyProfitAmount.style.padding = '6px 12px';
+    monthlyProfitAmount.style.borderRadius = '8px';
+    monthlyProfitAmount.style.border = '2px solid #e5e7eb';
+    monthlyProfitAmount.style.textShadow = 'none';
+    monthlyProfitAmount.style.boxShadow = 'none';
+    monthlyProfitAmount.style.minWidth = '100px';
+    monthlyProfitAmount.style.textAlign = 'center';
+    
+    // 色の設定
+    if (displayAmount > 0) {
+        monthlyProfitAmount.style.color = '#059669';
+    } else if (displayAmount < 0) {
+        monthlyProfitAmount.style.color = '#dc2626';
+    } else {
+        monthlyProfitAmount.style.color = '#6b7280';
+    }
+}
 }
