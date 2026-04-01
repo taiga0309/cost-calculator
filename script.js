@@ -2,9 +2,8 @@
 let products = [];
 let exchangeRates = {
     usdToRmb: 7.20,
-    usdToVnd: 24000
+    usdToVnd: 24000,
     usdToJpy: 150.0
-};
 };
 
 // 輸送形態別の標準数量
@@ -176,6 +175,22 @@ function saveExchangeRates() {
     const usdRmb = document.getElementById('usd-rmb');
     const usdVnd = document.getElementById('usd-vnd');
     const usdJpy = document.getElementById('usd-jpy');
+    if (usdRmb && usdVnd && usdJpy) {
+        exchangeRates.usdToRmb = parseFloat(usdRmb.value);
+        exchangeRates.usdToVnd = parseFloat(usdVnd.value);
+        exchangeRates.usdToJpy = parseFloat(usdJpy.value);
+        localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
+        
+        // 更新時刻を記録
+        const updateTime = new Date().toLocaleString('ja-JP');
+        const timeElement = document.getElementById('rate-update-time');
+        if (timeElement) {
+            timeElement.textContent = updateTime;
+        }
+        
+        showSaveIndicator('saved', '為替レートを保存しました');
+    }
+}
 
 // 通貨変換関数
 function convertCurrency(amount, fromCurrency, toCurrency) {
@@ -222,7 +237,6 @@ function getCurrencySymbol(currency) {
     };
     return symbols[currency] || '$';
 }
-
 
     
     if (usdRmb && usdVnd && usdJpy) {
