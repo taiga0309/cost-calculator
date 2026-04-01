@@ -670,7 +670,6 @@ function createEditableRow(product, index) {
     // Flexi運賃セル
     const flexiCostCell = document.createElement('td');
     const flexiCostDiv = document.createElement('div');
-    flexiCostDiv.className = 'editable-cell
     flexiCostDiv.className = 'editable-cell number';
     flexiCostDiv.textContent = (product.shippingCosts && product.shippingCosts.flexi ? product.shippingCosts.flexi : 0).toFixed(2);
     flexiCostDiv.dataset.originalValue = product.shippingCosts && product.shippingCosts.flexi ? product.shippingCosts.flexi : 0;
@@ -1054,4 +1053,137 @@ function updateMonthlyProfit() {
     if (monthlyRmbEl) monthlyRmbEl.textContent = '¥' + monthlyProfitRmb.toFixed(2);
     if (monthlyVndEl) monthlyVndEl.textContent = '₫' + Math.round(monthlyProfitVnd).toLocaleString();
     if (monthlyJpyEl) monthlyJpyEl.textContent = '¥' + Math.round(monthlyProfitJpy).toLocaleString();
+}
+// =================================
+// 新機能対応の関数追加
+// =================================
+
+// 利益表示通貨の更新（改良版）
+function updateProfitDisplay() {
+    const selectedCurrency = document.getElementById('profit-currency').value;
+    const profitAmountEl = document.getElementById('profit-amount');
+    
+    if (!profitAmountEl) return;
+    
+    // 現在のUSD利益額を取得
+    const profitUsdEl = document.getElementById('profit-usd');
+    if (!profitUsdEl) return;
+    
+    const profitUSD = parseFloat(profitUsdEl.textContent.replace('$', '')) || 0;
+    
+    // 選択された通貨に変換
+    let convertedAmount = profitUSD;
+    let symbol = '$';
+    
+    switch(selectedCurrency) {
+        case 'USD':
+            convertedAmount = profitUSD;
+            symbol = '$';
+            break;
+        case 'RMB':
+            convertedAmount = profitUSD * exchangeRates.usdToRmb;
+            symbol = '¥';
+            break;
+        case 'VND':
+            convertedAmount = profitUSD * exchangeRates.usdToVnd;
+            symbol = '₫';
+            break;
+        case 'JPY':
+            convertedAmount = profitUSD * exchangeRates.usdToJpy;
+            symbol = '¥';
+            break;
+    }
+    
+    // 表示更新
+    if (selectedCurrency === 'VND' || selectedCurrency === 'JPY') {
+        profitAmountEl.textContent = symbol + Math.round(convertedAmount).toLocaleString();
+    } else {
+        profitAmountEl.textContent = symbol + convertedAmount.toFixed(4);
+    }
+    
+    // 利益率に応じて色を変更
+    if (convertedAmount > 0) {
+        profitAmountEl.style.color = '#059669';
+    } else if (convertedAmount < 0) {
+        profitAmountEl.style.color = '#dc2626';
+    } else {
+        profitAmountEl.style.color = '#6b7280';
+    }
+}
+
+// 月間利益の更新（改良版）
+function updateMonthlyProfit() {
+    const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
+    const profitUsdEl = document.getElementById('profit-usd');
+    const monthlyProfitEl = document.getElementById('monthly-profit');
+    
+    if (!profitUsdEl || !monthlyProfitEl) return;
+    
+    if (monthlyVolume <= 0) {
+        // 月間利益セクションを非表示
+        monthlyProfitEl.style.display = 'none';
+        return;
+    }
+    
+    // 月間利益セクションを表示
+    monthlyProfitEl.style.display = 'block';
+    monthlyProfitEl.classList.add('show');
+    
+    // kg当たりの利益を取得
+    const profitPerKg = parseFloat(profitUsdEl.textContent.replace('$', '')) || 0;
+    
+    // 月間利益計算（トン→kg変換）
+    const monthlyProfitUsd = profitPerKg * monthlyVolume * 1000;
+    const monthlyProfitRmb = monthlyProfitUsd * exchangeRates.usdToRmb;
+    const monthlyProfitVnd = monthlyProfitUsd * exchangeRates.usdToVnd;
+    const monthlyProfitJpy = monthlyProfitUsd * exchangeRates.usdToJpy;
+    
+    // 表示更新
+    const elements = {
+        'monthly-profit-usd': '$' + monthlyProfitUsd.toFixed(2),
+        'monthly-profit-rmb': '¥' + monthlyProfitRmb.toFixed(2),
+        'monthly-profit-vnd': '₫' + Math.round(monthlyProfitVnd).toLocaleString(),
+        'monthly-profit-jpy': '¥' + Math.round(monthlyProfitJpy).toLocaleString()
+    };
+    
+    Object.keys(elements).forEach(function(id) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = elements[id];
+        }
+    });
+}
+
+// updateCalculation関数の拡張（利益表示と月間利益の自動更新）
+function updateCalculationExtended() {
+    // 既存のupdateCalculation関数を実行
+    updateCalculation();
+    
+    // 利益表示の更新
+    updateProfitDisplay();
+    
+    // 月間利益の更新
+    const monthlyVolumeInput = document.getElementById('monthly-volume');
+    if (monthlyVolumeInput && monthlyVolumeInput.value) {
+        updateMonthlyProfit();
+    }
+    // 計算の更新
+function updateCalculation() {
+    // ... 既存のコード ...
+    
+    if (containerCostEl) containerCostEl.textContent = '$' + containerCost.toFixed(4);
+    if (totalCostEl) totalCostEl.textContent = '$' + totalCost.toFixed(4);
+    
+    // ここに追加 ↓
+    // 利益表示の更新
+    setTimeout(function() {
+        updateProfitDisplay();
+        
+        // 月間利益の更新（値が入力されている場合）
+        const monthlyVolumeInput = document.getElementById('monthly-volume');
+        if (monthlyVolumeInput && monthlyVolumeInput.value) {
+            updateMonthlyProfit();
+        }
+    }, 100);
+}
 }
