@@ -1756,3 +1756,45 @@ button:focus {
         width: 100px;
     }
 }
+/* 月間利益額のスタイルを限界利益額と統一 */
+#monthly-profit-amount {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1e3a8a;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    min-width: 100px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+#monthly-profit-amount.positive {
+    color: #059669;
+    background: rgba(255, 255, 255, 0.8);
+    border-color: #e5e7eb;
+}
+
+#monthly-profit-amount.negative {
+    color: #dc2626;
+    background: rgba(255, 255, 255, 0.8);
+    border-color: #e5e7eb;
+}
+
+#monthly-profit-amount.zero {
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.8);
+    border-color: #e5e7eb;
+}
+
+/* 既存の強調スタイルを削除 */
+#monthly-profit-amount {
+    /* 以前の強調スタイルを上書き */
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    animation: none !important;
+}
