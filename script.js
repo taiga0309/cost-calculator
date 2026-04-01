@@ -7,11 +7,10 @@ let exchangeRates = {
 
 // 輸送形態別の標準数量
 const shippingQuantities = {
-    fcl20: 18900,    // この行を修正
-    fcl40: 24150,    // この行を追加
+    fcl20: 18900,
+    fcl40: 24150,
     flexi: 22000,
     iso: 23500
-};
 };
 
 // システム設定
@@ -73,14 +72,27 @@ function loadData() {
             products = JSON.parse(savedProducts);
             console.log('保存された製品データを読み込み:', products.length, '個');
             
-            // 既存データに rawCostOriginal がない場合の対応
+            // 既存データの変換とアップデート
             products.forEach(function(product) {
                 if (!product.rawCostOriginal && product.rawCost) {
                     product.rawCostOriginal = (product.rawCost * 1000 * exchangeRates.usdToRmb).toFixed(2);
                 }
+                
+                // 既存のfclをfcl20に変換し、fcl40を追加
+                if (product.shippingCosts && product.shippingCosts.fcl && !product.shippingCosts.fcl20) {
+                    product.shippingCosts.fcl20 = product.shippingCosts.fcl;
+                    product.shippingCosts.fcl40 = 0;
+                    delete product.shippingCosts.fcl;
+                }
+                
                 // shippingCostsが存在しない場合の対応
                 if (!product.shippingCosts) {
-                    product.shippingCosts = { fcl: 0, flexi: 0, iso: 0 };
+                    product.shippingCosts = { fcl20: 0, fcl40: 0, flexi: 0, iso: 0 };
+                }
+                
+                // fcl40が存在しない場合は追加
+                if (product.shippingCosts && !product.shippingCosts.hasOwnProperty('fcl40')) {
+                    product.shippingCosts.fcl40 = 0;
                 }
             });
         } catch (error) {
@@ -99,7 +111,8 @@ function loadData() {
                 variableCost: 0.05,
                 containerCost: 0.05,
                 shippingCosts: {
-                    fcl: 1200.0,
+                    fcl20: 1200.0,
+                    fcl40: 1800.0,
                     flexi: 1500.0,
                     iso: 1800.0
                 }
@@ -112,7 +125,8 @@ function loadData() {
                 variableCost: 0.08,
                 containerCost: 0.08,
                 shippingCosts: {
-                    fcl: 1800.0,
+                    fcl20: 1800.0,
+                    fcl40: 2400.0,
                     flexi: 2200.0,
                     iso: 2600.0
                 }
@@ -185,8 +199,8 @@ function populateProductSelect() {
 // 輸送形態名の取得
 function getShippingTypeName(type) {
     const names = {
-        'fcl20': 'FCL(20ft)',    // 'fcl' を 'fcl20' に変更
-        'fcl40': 'FCL(40ft)',    // この行を追加
+        'fcl20': 'FCL(20ft)',
+        'fcl40': 'FCL(40ft)',
         'flexi': 'Flexi',
         'iso': 'ISO'
     };
@@ -325,14 +339,16 @@ function loadSystemSettings() {
     // UIに反映
     const usdRmb = document.getElementById('usd-rmb');
     const usdVnd = document.getElementById('usd-vnd');
-    const fclQuantity = document.getElementById('fcl-quantity');
+    const fcl20Quantity = document.getElementById('fcl20-quantity');
+    const fcl40Quantity = document.getElementById('fcl40-quantity');
     const flexiQuantity = document.getElementById('flexi-quantity');
     const isoQuantity = document.getElementById('iso-quantity');
     const royaltyRate = document.getElementById('royalty-rate');
     
     if (usdRmb) usdRmb.value = exchangeRates.usdToRmb;
     if (usdVnd) usdVnd.value = exchangeRates.usdToVnd;
-    if (fclQuantity) fclQuantity.value = shippingQuantities.fcl;
+    if (fcl20Quantity) fcl20Quantity.value = shippingQuantities.fcl20;
+    if (fcl40Quantity) fcl40Quantity.value = shippingQuantities.fcl40;
     if (flexiQuantity) flexiQuantity.value = shippingQuantities.flexi;
     if (isoQuantity) isoQuantity.value = shippingQuantities.iso;
     if (royaltyRate) royaltyRate.value = systemSettings.royaltyRate;
@@ -342,11 +358,13 @@ function loadSystemSettings() {
 
 // 輸送形態別数量の保存
 function saveShippingQuantities() {
-    const fclQuantity = document.getElementById('fcl-quantity');
+    const fcl20Quantity = document.getElementById('fcl20-quantity');
+    const fcl40Quantity = document.getElementById('fcl40-quantity');
     const flexiQuantity = document.getElementById('flexi-quantity');
     const isoQuantity = document.getElementById('iso-quantity');
     
-    if (fclQuantity) shippingQuantities.fcl = parseInt(fclQuantity.value);
+    if (fcl20Quantity) shippingQuantities.fcl20 = parseInt(fcl20Quantity.value);
+    if (fcl40Quantity) shippingQuantities.fcl40 = parseInt(fcl40Quantity.value);
     if (flexiQuantity) shippingQuantities.flexi = parseInt(flexiQuantity.value);
     if (isoQuantity) shippingQuantities.iso = parseInt(isoQuantity.value);
     
@@ -384,7 +402,8 @@ function addNewProduct() {
         variableCost: 0,
         containerCost: 0,
         shippingCosts: {
-            fcl: 0,
+            fcl20: 0,
+            fcl40: 0,
             flexi: 0,
             iso: 0
         }
@@ -462,7 +481,7 @@ function displayEditableProducts() {
     if (products.length === 0) {
         console.log('製品がないため、空のメッセージを表示');
         const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = '<td colspan="8" style="text-align: center; padding: 40px; color: #6b7280; font-size: 16px;">製品が登録されていません。<br>「+ 新製品追加」ボタンで製品を追加してください。</td>';
+        emptyRow.innerHTML = '<td colspan="9" style="text-align: center; padding: 40px; color: #6b7280; font-size: 16px;">製品が登録されていません。<br>「+ 新製品追加」ボタンで製品を追加してください。</td>';
         tbody.appendChild(emptyRow);
         return;
     }
@@ -554,22 +573,39 @@ function createEditableRow(product, index) {
     
     containerCostCell.appendChild(containerCostDiv);
     
-    // FCL運賃セル
-    const fclCostCell = document.createElement('td');
-    const fclCostDiv = document.createElement('div');
-    fclCostDiv.className = 'editable-cell number';
-    fclCostDiv.textContent = (product.shippingCosts && product.shippingCosts.fcl ? product.shippingCosts.fcl : 0).toFixed(2);
-    fclCostDiv.dataset.originalValue = product.shippingCosts && product.shippingCosts.fcl ? product.shippingCosts.fcl : 0;
+    // FCL(20ft)運賃セル
+    const fcl20CostCell = document.createElement('td');
+    const fcl20CostDiv = document.createElement('div');
+    fcl20CostDiv.className = 'editable-cell number';
+    fcl20CostDiv.textContent = (product.shippingCosts && product.shippingCosts.fcl20 ? product.shippingCosts.fcl20 : 0).toFixed(2);
+    fcl20CostDiv.dataset.originalValue = product.shippingCosts && product.shippingCosts.fcl20 ? product.shippingCosts.fcl20 : 0;
     
-    fclCostDiv.addEventListener('click', function() {
-        editCell(fclCostDiv, 'number', function(value) {
+    fcl20CostDiv.addEventListener('click', function() {
+        editCell(fcl20CostDiv, 'number', function(value) {
             if (!product.shippingCosts) product.shippingCosts = {};
-            product.shippingCosts.fcl = parseFloat(value) || 0;
+            product.shippingCosts.fcl20 = parseFloat(value) || 0;
             scheduleAutoSave();
         });
     });
     
-    fclCostCell.appendChild(fclCostDiv);
+    fcl20CostCell.appendChild(fcl20CostDiv);
+    
+    // FCL(40ft)運賃セル
+    const fcl40CostCell = document.createElement('td');
+    const fcl40CostDiv = document.createElement('div');
+    fcl40CostDiv.className = 'editable-cell number';
+    fcl40CostDiv.textContent = (product.shippingCosts && product.shippingCosts.fcl40 ? product.shippingCosts.fcl40 : 0).toFixed(2);
+    fcl40CostDiv.dataset.originalValue = product.shippingCosts && product.shippingCosts.fcl40 ? product.shippingCosts.fcl40 : 0;
+    
+    fcl40CostDiv.addEventListener('click', function() {
+        editCell(fcl40CostDiv, 'number', function(value) {
+            if (!product.shippingCosts) product.shippingCosts = {};
+            product.shippingCosts.fcl40 = parseFloat(value) || 0;
+            scheduleAutoSave();
+        });
+    });
+    
+    fcl40CostCell.appendChild(fcl40CostDiv);
     
     // Flexi運賃セル
     const flexiCostCell = document.createElement('td');
@@ -615,7 +651,8 @@ function createEditableRow(product, index) {
     row.appendChild(rawCostCell);
     row.appendChild(variableCostCell);
     row.appendChild(containerCostCell);
-    row.appendChild(fclCostCell);
+    row.appendChild(fcl20CostCell);
+    row.appendChild(fcl40CostCell);
     row.appendChild(flexiCostCell);
     row.appendChild(isoCostCell);
     row.appendChild(actionCell);
@@ -703,8 +740,7 @@ function deleteProductRow(id) {
     }
 }
 
-
-//すべて保存
+// すべて保存
 function saveAllProducts() {
     saveProducts();
     showSaveIndicator('saved', 'すべての製品を保存しました');
@@ -770,12 +806,13 @@ function saveProduct() {
     const rawCostRmbTon = parseFloat(document.getElementById('new-raw-cost').value);
     const variableCost = parseFloat(document.getElementById('new-variable-cost').value);
     const containerCost = parseFloat(document.getElementById('new-container-cost').value);
-    const fclCost = parseFloat(document.getElementById('new-fcl-cost').value);
+    const fcl20Cost = parseFloat(document.getElementById('new-fcl20-cost').value);
+    const fcl40Cost = parseFloat(document.getElementById('new-fcl40-cost').value);
     const flexiCost = parseFloat(document.getElementById('new-flexi-cost').value);
     const isoCost = parseFloat(document.getElementById('new-iso-cost').value);
     
     if (!name || isNaN(rawCostRmbTon) || isNaN(variableCost) || isNaN(containerCost) || 
-        isNaN(fclCost) || isNaN(flexiCost) || isNaN(isoCost)) {
+        isNaN(fcl20Cost) || isNaN(fcl40Cost) || isNaN(flexiCost) || isNaN(isoCost)) {
         alert('すべての項目を正しく入力してください');
         return;
     }
@@ -790,7 +827,8 @@ function saveProduct() {
         variableCost: variableCost,
         containerCost: containerCost,
         shippingCosts: {
-            fcl: fclCost,
+            fcl20: fcl20Cost,
+            fcl40: fcl40Cost,
             flexi: flexiCost,
             iso: isoCost
         }
@@ -827,7 +865,8 @@ function editProduct(id) {
         (product.rawCost * 1000 * exchangeRates.usdToRmb).toFixed(2);
     document.getElementById('new-variable-cost').value = product.variableCost;
     document.getElementById('new-container-cost').value = product.containerCost;
-    document.getElementById('new-fcl-cost').value = product.shippingCosts.fcl;
+    document.getElementById('new-fcl20-cost').value = product.shippingCosts.fcl20;
+    document.getElementById('new-fcl40-cost').value = product.shippingCosts.fcl40;
     document.getElementById('new-flexi-cost').value = product.shippingCosts.flexi;
     document.getElementById('new-iso-cost').value = product.shippingCosts.iso;
     
@@ -851,7 +890,8 @@ function clearForm() {
     document.getElementById('new-raw-cost').value = '';
     document.getElementById('new-variable-cost').value = '';
     document.getElementById('new-container-cost').value = '';
-    document.getElementById('new-fcl-cost').value = '';
+    document.getElementById('new-fcl20-cost').value = '';
+    document.getElementById('new-fcl40-cost').value = '';
     document.getElementById('new-flexi-cost').value = '';
     document.getElementById('new-iso-cost').value = '';
     
@@ -874,7 +914,7 @@ function displayProducts() {
     let html = '<div class="product-row product-header"><div>製品名</div><div>原料費</div><div>変動費($/kg)</div><div>容器費($/kg)</div><div>輸送形態別運賃</div><div>操作</div></div>';
     
     products.forEach(function(product) {
-        const shippingInfo = 'FCL(' + shippingQuantities.fcl + 'kg): $' + product.shippingCosts.fcl.toFixed(2) + '<br>Flexi(' + shippingQuantities.flexi + 'kg): $' + product.shippingCosts.flexi.toFixed(2) + '<br>ISO(' + shippingQuantities.iso + 'kg): $' + product.shippingCosts.iso.toFixed(2);
+        const shippingInfo = 'FCL(20ft)(' + shippingQuantities.fcl20 + 'kg): $' + product.shippingCosts.fcl20.toFixed(2) + '<br>FCL(40ft)(' + shippingQuantities.fcl40 + 'kg): $' + product.shippingCosts.fcl40.toFixed(2) + '<br>Flexi(' + shippingQuantities.flexi + 'kg): $' + product.shippingCosts.flexi.toFixed(2) + '<br>ISO(' + shippingQuantities.iso + 'kg): $' + product.shippingCosts.iso.toFixed(2);
         
         const rawCostDisplay = (product.rawCostOriginal ? parseFloat(product.rawCostOriginal).toFixed(2) : '-') + ' RMB/トン<br><small>($' + product.rawCost.toFixed(4) + '/kg)</small>';
         
