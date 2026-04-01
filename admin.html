@@ -39,9 +39,9 @@
                 <section class="system-settings">
                     <h2>⚙️ システム設定</h2>
                     
-                    <div class="settings-grid">
-                        <div class="setting-group">
-                            <h3>為替レート</h3>
+                        <div class="settings-grid">
+                         <div class="setting-group">
+                            <h3>為替レート設定</h3>
                             <div class="rate-group">
                                 <label>USD → RMB:</label>
                                 <input type="number" id="usd-rmb" step="0.01" value="7.20" onchange="saveExchangeRates()">
@@ -49,6 +49,13 @@
                             <div class="rate-group">
                                 <label>USD → VND:</label>
                                 <input type="number" id="usd-vnd" step="1" value="24000" onchange="saveExchangeRates()">
+                            </div>
+                            <div class="rate-group">
+                                <label>USD → JPY:</label>
+                                <input type="number" id="usd-jpy" step="0.1" value="150.0" onchange="saveExchangeRates()">
+                            </div>
+                            <div class="rate-update-info">
+                                <small>最終更新: <span id="rate-update-time">手動設定</span></small>
                             </div>
                         </div>
 
