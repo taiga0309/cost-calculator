@@ -15,14 +15,10 @@
     
     <!-- Favicon設定 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzQyOTllMSIvPgo8dGV4dCB4PSIxNiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7vvJI8L3RleHQ+Cjwvc3ZnPgo=">
-</head>
-    <!-- Favicon設定 -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzQyOTllMSIvPgo8dGV4dCB4PSIxNiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7vvJI8L3RleHQ+Cjwvc3ZnPgo=">
     <link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzQyOTllMSIvPgo8dGV4dCB4PSIxNiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7vvJI8L3RleHQ+Cjwvc3ZnPgo=">
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjAiIGZpbGw9IiM0Mjk5ZTEiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4eiIvPgo8cGF0aCBkPSJNMTEgN2gydjJoLTJWN3ptMCA0aDJ2NmgtMnYtNnoiLz4KPC9zdmc+Cjwvc3ZnPgo=">
-
 </head>
 <body>
     <div class="container">
@@ -39,8 +35,8 @@
                 <section class="system-settings">
                     <h2>⚙️ システム設定</h2>
                     
-                        <div class="settings-grid">
-                         <div class="setting-group">
+                    <div class="settings-grid">
+                        <div class="setting-group">
                             <h3>為替レート設定</h3>
                             <div class="rate-group">
                                 <label>USD → RMB:</label>
@@ -94,7 +90,7 @@
                     <h2>📦 製品管理</h2>
                     
                     <div class="table-controls">
-                        <button class="add-row-btn" onclick="addNewProduct(); console.log('ボタンがクリックされました');">+ 新製品追加</button>
+                        <button class="add-row-btn" onclick="addNewProduct()">+ 新製品追加</button>
                         <button class="save-all-btn" onclick="saveAllProducts()">💾 すべて保存</button>
                         <div class="auto-save-status" id="auto-save-status">自動保存: オン</div>
                     </div>
@@ -103,7 +99,7 @@
                         <table class="editable-table" id="products-editable-table">
                             <thead>
                                 <tr>
-                                   <th>製品名</th>
+                                    <th>製品名</th>
                                     <th>原料費<br><small>(RMB/トン)</small></th>
                                     <th>変動費<br><small>(USD/kg)</small></th>
                                     <th>容器費<br><small>(USD/kg)</small></th>
@@ -112,6 +108,7 @@
                                     <th>Flexi運賃<br><small>(USD)</small></th>
                                     <th>ISO運賃<br><small>(USD)</small></th>
                                     <th>操作</th>
+                                </tr>
                             </thead>
                             <tbody id="editable-products-body">
                                 <!-- 製品データがここに表示される -->
@@ -150,9 +147,10 @@
                             <div class="shipping-costs">
                                 <h4>輸送形態別運賃設定</h4>
                                 <div class="shipping-form">
-                                    <input type="number" id="new-fcl-cost" step="0.01" placeholder="FCL(18,900kg) 運賃総額 (USD)">
-                                    <input type="number" id="new-flexi-cost" step="0.01" placeholder="Flexi(22,000kg) 運賃総額 (USD)">
-                                    <input type="number" id="new-iso-cost" step="0.01" placeholder="ISO(23,500kg) 運賃総額 (USD)">
+                                    <input type="number" id="new-fcl20-cost" step="0.01" placeholder="FCL(20ft) 運賃総額 (USD)">
+                                    <input type="number" id="new-fcl40-cost" step="0.01" placeholder="FCL(40ft) 運賃総額 (USD)">
+                                    <input type="number" id="new-flexi-cost" step="0.01" placeholder="Flexi 運賃総額 (USD)">
+                                    <input type="number" id="new-iso-cost" step="0.01" placeholder="ISO 運賃総額 (USD)">
                                 </div>
                             </div>
                             
@@ -171,39 +169,5 @@
     <div id="save-indicator" class="save-indicator"></div>
 
     <script src="script.js"></script>
-    <script>
-        // 管理者ページ用の初期化
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('管理者ページが読み込まれました');
-            
-            // データ読み込み
-            loadData();
-            
-            // システム設定読み込み
-            loadSystemSettings();
-            
-            // 編集可能テーブル表示
-            displayEditableProducts();
-            
-            // メインページ用の製品選択肢更新
-            populateProductSelect();
-            
-            console.log('初期化完了。製品数:', products.length);
-        });
-
-        // デバッグ用関数
-        function debugInfo() {
-            console.log('=== デバッグ情報 ===');
-            console.log('製品数:', products.length);
-            console.log('製品リスト:', products);
-            console.log('テーブルボディ要素:', document.getElementById('editable-products-body'));
-            console.log('==================');
-        }
-
-        // デバッグボタン（一時的）
-        function showDebugInfo() {
-            debugInfo();
-        }
-    </script>
 </body>
 </html>
