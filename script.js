@@ -436,6 +436,7 @@ function updateProfitDisplay() {
 
 // 月間利益の更新
 
+// 月間利益の更新（見栄え改善版）
 function updateMonthlyProfit() {
     const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
     const profitRateEl = document.getElementById('profit-rate');
@@ -454,24 +455,21 @@ function updateMonthlyProfit() {
     const monthlyVndEl = document.getElementById('monthly-profit-vnd');
     const monthlyJpyEl = document.getElementById('monthly-profit-jpy');
     
+    // 親要素を取得してアニメーション用クラスを追加
+    const currencyResults = document.querySelectorAll('.currency-result');
+    currencyResults.forEach(function(el) {
+        el.classList.add('updating');
+        setTimeout(function() {
+            el.classList.remove('updating');
+        }, 500);
+    });
+    
     if (monthlyVolume <= 0 || price <= 0) {
         // クリア
-        if (monthlyUsdEl) {
-            monthlyUsdEl.textContent = '$0';
-            monthlyUsdEl.style.color = '#6b7280';
-        }
-        if (monthlyRmbEl) {
-            monthlyRmbEl.textContent = '¥0';
-            monthlyRmbEl.style.color = '#6b7280';
-        }
-        if (monthlyVndEl) {
-            monthlyVndEl.textContent = '₫0';
-            monthlyVndEl.style.color = '#6b7280';
-        }
-        if (monthlyJpyEl) {
-            monthlyJpyEl.textContent = '¥0';
-            monthlyJpyEl.style.color = '#6b7280';
-        }
+        updateCurrencyDisplay(monthlyUsdEl, 0, '$', 'USD');
+        updateCurrencyDisplay(monthlyRmbEl, 0, '¥', 'RMB');
+        updateCurrencyDisplay(monthlyVndEl, 0, '₫', 'VND');
+        updateCurrencyDisplay(monthlyJpyEl, 0, '¥', 'JPY');
         return;
     }
     
@@ -492,41 +490,64 @@ function updateMonthlyProfit() {
     const monthlyProfitVnd = monthlyProfitUsd * exchangeRates.usdToVnd;
     const monthlyProfitJpy = monthlyProfitUsd * exchangeRates.usdToJpy;
     
-    // 数値フォーマット関数
-    function formatCurrency(amount, decimals = 0) {
-        if (decimals > 0) {
-            return amount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        } else {
-            return Math.round(amount).toLocaleString();
+    // 表示更新
+    updateCurrencyDisplay(monthlyUsdEl, monthlyProfitUsd, '$', 'USD');
+    updateCurrencyDisplay(monthlyRmbEl, monthlyProfitRmb, '¥', 'RMB');
+    updateCurrencyDisplay(monthlyVndEl, monthlyProfitVnd, '₫', 'VND');
+    updateCurrencyDisplay(monthlyJpyEl, monthlyProfitJpy, '¥', 'JPY');
+}
+
+// 通貨表示の更新（共通関数）
+function updateCurrencyDisplay(element, amount, symbol, currency) {
+    if (!element) return;
+    
+    // 親要素のクラス管理
+    const parentResult = element.closest('.currency-result');
+    if (parentResult) {
+        // 既存のクラスをリセット
+        parentResult.classList.remove('high-profit', 'loss');
+        
+        // 金額に応じてクラスを追加
+        if (amount > 100000) { // 大きな利益
+            parentResult.classList.add('high-profit');
+        } else if (amount < 0) { // 損失
+            parentResult.classList.add('loss');
         }
     }
     
-    // 色の決定
-    function getColor(amount) {
-        if (amount > 0) return '#059669';
-        if (amount < 0) return '#dc2626';
-        return '#6b7280';
+    // 数値フォーマット
+    let formattedAmount;
+    if (currency === 'VND' || currency === 'JPY') {
+        // 整数でカンマ区切り
+        formattedAmount = Math.round(amount).toLocaleString();
+    } else {
+        // 小数点以下2桁でカンマ区切り
+        if (Math.abs(amount) >= 1000000) {
+            // 100万以上は小数点1桁
+            formattedAmount = amount.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        } else {
+            formattedAmount = amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
     }
     
     // 表示更新
-    if (monthlyUsdEl) {
-        monthlyUsdEl.textContent = '$' + formatCurrency(monthlyProfitUsd, 2);
-        monthlyUsdEl.style.color = getColor(monthlyProfitUsd);
+    element.textContent = symbol + formattedAmount;
+    
+    // 色の設定
+    if (amount > 0) {
+        element.style.color = '#059669';
+    } else if (amount < 0) {
+        element.style.color = '#dc2626';
+    } else {
+        element.style.color = '#6b7280';
     }
-    if (monthlyRmbEl) {
-        monthlyRmbEl.textContent = '¥' + formatCurrency(monthlyProfitRmb, 2);
-        monthlyRmbEl.style.color = getColor(monthlyProfitRmb);
-    }
-    if (monthlyVndEl) {
-        monthlyVndEl.textContent = '₫' + formatCurrency(monthlyProfitVnd);
-        monthlyVndEl.style.color = getColor(monthlyProfitVnd);
-    }
-    if (monthlyJpyEl) {
-        monthlyJpyEl.textContent = '¥' + formatCurrency(monthlyProfitJpy);
-        monthlyJpyEl.style.color = getColor(monthlyProfitJpy);
+    
+    // 大きな数値の場合は単位を追加
+    if (Math.abs(amount) >= 1000000) {
+        const unit = Math.abs(amount) >= 1000000000 ? 'B' : 'M';
+        element.setAttribute('title', '約' + (amount / (unit === 'B' ? 1000000000 : 1000000)).toFixed(1) + unit + ' ' + currency);
     }
 }
-
 
 // 結果のクリア
 function clearResults() {
