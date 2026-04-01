@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>原価計算アプリ</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA対応 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4299e1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="原価計算">
     
     <!-- Favicon設定 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzQyOTllMSIvPgo8dGV4dCB4PSIxNiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7vvJI8L3RleHQ+Cjwvc3ZnPgo=">
@@ -13,7 +19,6 @@
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjAiIGZpbGw9IiM0Mjk5ZTEiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4eiIvPgo8cGF0aCBkPSJNMTEgN2gydjJoLTJWN3ptMCA0aDJ2NmgtMnYtNnoiLz4KPC9zdmc+Cjwvc3ZnPgo=">
-
 </head>
 <body>
     <div class="container">
@@ -40,7 +45,7 @@
                     <select id="shipping-type" onchange="updateCalculation()">
                         <option value="">輸送形態を選択してください</option>
                         <option value="fcl20">FCL(20ft)</option>
-   　　　　　　　　　　　 <option value="fcl40">FCL(40ft)</option>
+                        <option value="fcl40">FCL(40ft)</option>
                         <option value="flexi">Flexi</option>
                         <option value="iso">ISO</option>
                     </select>
@@ -81,54 +86,54 @@
                 </div>
 
                 <div class="results" id="results">
-    <h3>計算結果 (kg当たり)</h3>
-    <div class="result-item">
-        <span>限界利益率:</span>
-        <span id="profit-rate">--%</span>
-    </div>
-    <div class="result-item">
-        <span>限界利益額:</span>
-        <div class="profit-currency-group">
-            <select id="profit-currency" onchange="updateProfitDisplay()">
-                <option value="USD">USD ($)</option>
-                <option value="RMB">RMB (¥)</option>
-                <option value="VND">VND (₫)</option>
-                <option value="JPY">JPY (¥)</option>
-            </select>
-            <span id="profit-amount">$0.00</span>
-        </div>
-    </div>
-</div>
+                    <h3>計算結果 (kg当たり)</h3>
+                    <div class="result-item">
+                        <span>限界利益率:</span>
+                        <span id="profit-rate">--%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>限界利益額:</span>
+                        <div class="profit-currency-group">
+                            <select id="profit-currency" onchange="updateProfitDisplay()">
+                                <option value="USD">USD ($)</option>
+                                <option value="RMB">RMB (¥)</option>
+                                <option value="VND">VND (₫)</option>
+                                <option value="JPY">JPY (¥)</option>
+                            </select>
+                            <span id="profit-amount">$0.00</span>
+                        </div>
+                    </div>
+                </div>
 
-<!-- 月間利益計算セクションを追加 -->
-<div class="monthly-profit" id="monthly-profit" style="display:none;">
-    <h3>月間利益シミュレーション</h3>
-    <div class="monthly-input-group">
-        <label for="monthly-volume">月販売量 (トン):</label>
-        <input type="number" id="monthly-volume" step="0.1" placeholder="0.0" oninput="updateMonthlyProfit()">
-    </div>
-    <div class="monthly-result">
-        <span>月限界利益額:</span>
-        <div class="monthly-currencies">
-            <div class="currency-result">
-                <span class="currency-label">USD:</span>
-                <span id="monthly-profit-usd">$0.00</span>
-            </div>
-            <div class="currency-result">
-                <span class="currency-label">RMB:</span>
-                <span id="monthly-profit-rmb">¥0.00</span>
-            </div>
-            <div class="currency-result">
-                <span class="currency-label">VND:</span>
-                <span id="monthly-profit-vnd">₫0</span>
-            </div>
-            <div class="currency-result">
-                <span class="currency-label">JPY:</span>
-                <span id="monthly-profit-jpy">¥0</span>
-            </div>
-        </div>
-    </div>
-</div>
+                <!-- 月間利益計算セクション -->
+                <div class="monthly-profit" id="monthly-profit" style="display:none;">
+                    <h3>月間利益シミュレーション</h3>
+                    <div class="monthly-input-group">
+                        <label for="monthly-volume">月販売量 (トン):</label>
+                        <input type="number" id="monthly-volume" step="0.1" placeholder="0.0" oninput="updateMonthlyProfit()">
+                    </div>
+                    <div class="monthly-result">
+                        <span>月限界利益額:</span>
+                        <div class="monthly-currencies">
+                            <div class="currency-result">
+                                <span class="currency-label">USD:</span>
+                                <span id="monthly-profit-usd">$0.00</span>
+                            </div>
+                            <div class="currency-result">
+                                <span class="currency-label">RMB:</span>
+                                <span id="monthly-profit-rmb">¥0.00</span>
+                            </div>
+                            <div class="currency-result">
+                                <span class="currency-label">VND:</span>
+                                <span id="monthly-profit-vnd">₫0</span>
+                            </div>
+                            <div class="currency-result">
+                                <span class="currency-label">JPY:</span>
+                                <span id="monthly-profit-jpy">¥0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="cost-breakdown" id="cost-breakdown">
                     <h3>コスト内訳 (kg当たり)</h3>
