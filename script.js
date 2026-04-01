@@ -1246,3 +1246,87 @@ function updateMonthlyProfitDisplay() {
     // 表示更新
     monthlyProfitAmount.textContent = symbol + formattedAmount;
 }
+// 月間利益の更新（シンプル版）
+function updateMonthlyProfit() {
+    const monthlyVolume = parseFloat(document.getElementById('monthly-volume').value) || 0;
+    const profitRateEl = document.getElementById('profit-rate');
+    const priceInput = document.getElementById('price');
+    const currencyInput = document.getElementById('currency');
+    const selectedCurrency = document.getElementById('monthly-currency');
+    const monthlyProfitAmount = document.getElementById('monthly-profit-amount');
+    
+    if (!profitRateEl || !priceInput || !selectedCurrency || !monthlyProfitAmount) return;
+    
+    if (monthlyVolume <= 0) {
+        monthlyProfitAmount.textContent = '$0';
+        monthlyProfitAmount.style.color = '#6b7280';
+        return;
+    }
+    
+    const profitRate = parseFloat(profitRateEl.textContent.replace('%', '')) || 0;
+    const price = parseFloat(priceInput.value) || 0;
+    const inputCurrency = currencyInput ? currencyInput.value : 'USD';
+    
+    if (price <= 0) {
+        monthlyProfitAmount.textContent = '$0';
+        monthlyProfitAmount.style.color = '#6b7280';
+        return;
+    }
+    
+    // 入力価格をUSDに変換
+    let priceUSD = price;
+    if (inputCurrency === 'RMB') {
+        priceUSD = price / exchangeRates.usdToRmb;
+    } else if (inputCurrency === 'VND') {
+        priceUSD = price / exchangeRates.usdToVnd;
+    }
+    
+    // kg当たりの利益をUSDで計算
+    const profitPerKgUSD = priceUSD * (profitRate / 100);
+    
+    // 月間利益計算（トン→kg変換）
+    const monthlyProfitUsd = profitPerKgUSD * monthlyVolume * 1000;
+    
+    // 選択された通貨に変換
+    let displayAmount = monthlyProfitUsd;
+    let symbol = '$';
+    
+    switch(selectedCurrency.value) {
+        case 'USD':
+            displayAmount = monthlyProfitUsd;
+            symbol = '$';
+            break;
+        case 'RMB':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToRmb;
+            symbol = '¥';
+            break;
+        case 'VND':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToVnd;
+            symbol = '₫';
+            break;
+        case 'JPY':
+            displayAmount = monthlyProfitUsd * exchangeRates.usdToJpy;
+            symbol = '¥';
+            break;
+    }
+    
+    // 数値フォーマット
+    let formattedAmount;
+    if (selectedCurrency.value === 'VND' || selectedCurrency.value === 'JPY') {
+        formattedAmount = Math.round(displayAmount).toLocaleString();
+    } else {
+        formattedAmount = displayAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    
+    // 表示更新
+    monthlyProfitAmount.textContent = symbol + formattedAmount;
+    
+    // 色の設定
+    if (displayAmount > 0) {
+        monthlyProfitAmount.style.color = '#059669';
+    } else if (displayAmount < 0) {
+        monthlyProfitAmount.style.color = '#dc2626';
+    } else {
+        monthlyProfitAmount.style.color = '#6b7280';
+    }
+}
