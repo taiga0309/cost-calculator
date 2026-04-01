@@ -921,3 +921,92 @@ button:focus {
         display: none;
     }
 }
+
+/* 管理者ページ - 製品テーブル用CSS（FCL40ft対応） */
+.editable-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 900px; /* 幅を広げる */
+}
+
+.editable-table th {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #1e293b;
+    font-weight: 600;
+    padding: 15px 8px; /* パディング調整 */
+    text-align: center;
+    border: 1px solid #cbd5e1;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+    font-size: 12px; /* フォントサイズ調整 */
+}
+
+.editable-table th small {
+    display: block;
+    font-weight: 400;
+    color: #64748b;
+    margin-top: 3px;
+    font-size: 10px;
+}
+
+.editable-table td {
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    vertical-align: middle;
+    min-width: 80px; /* 最小幅設定 */
+}
+
+/* 編集可能セルの調整 */
+.editable-cell {
+    padding: 10px 6px; /* パディング調整 */
+    min-height: 40px;
+    cursor: text;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 70px;
+    word-break: break-word;
+    font-size: 12px; /* フォントサイズ調整 */
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1200px) {
+    .editable-table {
+        min-width: 800px;
+        font-size: 11px;
+    }
+    
+    .editable-cell {
+        padding: 8px 4px;
+        min-height: 35px;
+        font-size: 11px;
+    }
+    
+    .editable-table th {
+        padding: 12px 6px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+    .editable-table {
+        min-width: 600px;
+        font-size: 10px;
+    }
+    
+    .editable-cell {
+        padding: 6px 3px;
+        min-height: 30px;
+        font-size: 10px;
+    }
+    
+    .editable-table th {
+        padding: 10px 4px;
+        font-size: 10px;
+    }
+}
