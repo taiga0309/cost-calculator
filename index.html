@@ -118,50 +118,7 @@
     </div>
 </div>
 
-              <!-- 月間利益計算セクション -->
-<div class="monthly-profit" id="monthly-profit">
-    <h3>月間利益シミュレーション</h3>
-    <div class="monthly-input-group">
-        <label for="monthly-volume">月販売量 (トン):</label>
-        <input type="number" id="monthly-volume" step="0.1" placeholder="例: 500" oninput="updateMonthlyProfit()">
-    </div>
-    <div class="monthly-result">
-        <div class="monthly-profit-display">
-            <span class="monthly-label">💰 月間限界利益額:</span>
-            <div class="monthly-currency-selector">
-                <select id="monthly-currency" onchange="updateMonthlyProfitDisplay()">
-                    <option value="USD">USD (米ドル)</option>
-                    <option value="RMB">RMB (人民元)</option>
-                    <option value="VND">VND (ベトナムドン)</option>
-                    <option value="JPY">JPY (日本円)</option>
-                </select>
-                <span id="monthly-profit-amount">$0</span>
-            </div>
-        </div>
-        
-        <div class="monthly-currencies-detail">
-            <h4>全通貨表示</h4>
-            <div class="monthly-currencies">
-                <div class="currency-result">
-                    <span class="currency-label">USD (米ドル)</span>
-                    <span id="monthly-profit-usd">$0</span>
-                </div>
-                <div class="currency-result">
-                    <span class="currency-label">RMB (人民元)</span>
-                    <span id="monthly-profit-rmb">¥0</span>
-                </div>
-                <div class="currency-result">
-                    <span class="currency-label">VND (ベトナムドン)</span>
-                    <span id="monthly-profit-vnd">₫0</span>
-                </div>
-                <div class="currency-result">
-                    <span class="currency-label">JPY (日本円)</span>
-                    <span id="monthly-profit-jpy">¥0</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  
                 <div class="cost-breakdown" id="cost-breakdown">
                     <h3>コスト内訳 (kg当たり)</h3>
                     <div class="breakdown-item">
