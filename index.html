@@ -86,24 +86,37 @@
                 </div>
 
                 <div class="results" id="results">
-                    <h3>計算結果 (kg当たり)</h3>
-                    <div class="result-item">
-                        <span>限界利益率:</span>
-                        <span id="profit-rate">--%</span>
-                    </div>
-                    <div class="result-item">
-                        <span>限界利益額:</span>
-                        <div class="profit-currency-group">
-                            <select id="profit-currency" onchange="updateProfitDisplay()">
-                                <option value="USD">USD ($)</option>
-                                <option value="RMB">RMB (¥)</option>
-                                <option value="VND">VND (₫)</option>
-                                <option value="JPY">JPY (¥)</option>
-                            </select>
-                            <span id="profit-amount">$0.00</span>
-                        </div>
-                    </div>
-                </div>
+    <h3>計算結果 (kg当たり)</h3>
+    <div class="result-item">
+        <span>限界利益率:</span>
+        <span id="profit-rate">--%</span>
+    </div>
+    <div class="result-item">
+        <span>限界利益額:</span>
+        <div class="profit-currency-group">
+            <select id="profit-currency" onchange="updateProfitDisplay()">
+                <option value="USD">USD ($)</option>
+                <option value="RMB">RMB (¥)</option>
+                <option value="VND">VND (₫)</option>
+                <option value="JPY">JPY (¥)</option>
+            </select>
+            <span id="profit-amount">$0.00</span>
+        </div>
+    </div>
+    <div class="result-item">
+        <span>月間利益額 (トン):</span>
+        <div class="profit-currency-group">
+            <input type="number" id="monthly-volume" step="0.1" placeholder="500" oninput="updateMonthlyProfit()" style="width: 80px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: white; font-size: 14px;">
+            <select id="monthly-currency" onchange="updateMonthlyProfit()">
+                <option value="USD">USD ($)</option>
+                <option value="RMB">RMB (¥)</option>
+                <option value="VND">VND (₫)</option>
+                <option value="JPY">JPY (¥)</option>
+            </select>
+            <span id="monthly-profit-amount">$0</span>
+        </div>
+    </div>
+</div>
 
               <!-- 月間利益計算セクション -->
 <div class="monthly-profit" id="monthly-profit">
