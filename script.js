@@ -318,7 +318,12 @@ function updateCalculation() {
     const variableCost = product.variableCost;
     const royaltyCost = priceUSD * getRoyaltyRate();
     const logisticsCost = logisticsUnitPrice;
-    const containerCost = product.containerCost;
+    // 容器費の計算（FlexiとISOの場合は容器費を含めない）
+    let containerCost = 0;
+    if (shippingType === 'fcl20' || shippingType === 'fcl40') {
+        containerCost = product.containerCost;
+    }
+    // flexiとisoの場合は容器費は0のまま
     
     const totalCost = rawCost + variableCost + royaltyCost + logisticsCost + containerCost;
     const profitUSD = priceUSD - totalCost;
@@ -340,8 +345,21 @@ function updateCalculation() {
     if (variableCostEl) variableCostEl.textContent = '$' + variableCost.toFixed(4);
     if (royaltyCostEl) royaltyCostEl.textContent = '$' + royaltyCost.toFixed(4);
     if (logisticsCostEl) logisticsCostEl.textContent = '$' + logisticsCost.toFixed(4);
-    if (containerCostEl) containerCostEl.textContent = '$' + containerCost.toFixed(4);
-    if (totalCostEl) totalCostEl.textContent = '$' + totalCost.toFixed(4);
+
+// 容器費の表示（FlexiとISOの場合は「含まれる」と表示）
+if (containerCostEl) {
+    if (shippingType === 'flexi' || shippingType === 'iso') {
+        containerCostEl.textContent = '$0.0000 (輸送費に含まれる)';
+        containerCostEl.style.fontStyle = 'italic';
+        containerCostEl.style.color = '#6b7280';
+    } else {
+        containerCostEl.textContent = '$' + containerCost.toFixed(4);
+        containerCostEl.style.fontStyle = 'normal';
+        containerCostEl.style.color = '';
+    }
+}
+
+if (totalCostEl) totalCostEl.textContent = '$' + totalCost.toFixed(4);
     
     // 利益額の表示更新
     updateProfitDisplay();
